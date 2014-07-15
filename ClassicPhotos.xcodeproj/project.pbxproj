@@ -13,6 +13,7 @@
 		CEA2004119749F5D0011578E /* ClassicPhotosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA2004019749F5D0011578E /* ClassicPhotosTests.m */; };
 		CEA2004B1974A0210011578E /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA2004A1974A0210011578E /* CoreImage.framework */; };
 		CEA2004E1974A15B0011578E /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA2004D1974A15B0011578E /* ListViewController.m */; };
+		CEA200511974C5C20011578E /* PhotoRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA200501974C5C20011578E /* PhotoRecord.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,8 @@
 		CEA2004A1974A0210011578E /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		CEA2004C1974A15B0011578E /* ListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewController.h; sourceTree = "<group>"; };
 		CEA2004D1974A15B0011578E /* ListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewController.m; sourceTree = "<group>"; };
+		CEA2004F1974C5C20011578E /* PhotoRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoRecord.h; sourceTree = "<group>"; };
+		CEA200501974C5C20011578E /* PhotoRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoRecord.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +88,8 @@
 				CEA2003219749F5C0011578E /* AppDelegate.m */,
 				CEA2004C1974A15B0011578E /* ListViewController.h */,
 				CEA2004D1974A15B0011578E /* ListViewController.m */,
+				CEA2004F1974C5C20011578E /* PhotoRecord.h */,
+				CEA200501974C5C20011578E /* PhotoRecord.m */,
 				CEA2003419749F5C0011578E /* Images.xcassets */,
 				CEA2002D19749F5C0011578E /* Supporting Files */,
 			);
@@ -215,6 +220,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEA2003319749F5C0011578E /* AppDelegate.m in Sources */,
+				CEA200511974C5C20011578E /* PhotoRecord.m in Sources */,
 				CEA2003019749F5C0011578E /* main.m in Sources */,
 				CEA2004E1974A15B0011578E /* ListViewController.m in Sources */,
 			);

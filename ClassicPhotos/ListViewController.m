@@ -120,7 +120,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [self cancelAllOperations];
 }
 
 #pragma mark - Table view data source
@@ -169,7 +169,8 @@
         [(UIActivityIndicatorView*) cell.accessoryView startAnimating];
         cell.textLabel.text = @"";
         
-        if (!tableView.dragging && tableView.decelerating) {
+        //if the table is not moving start loading rows
+        if (!tableView.dragging && !tableView.decelerating) {
             [self startOperationsForPhotoRecord:record atIndexPath:indexPath];
         }
         
@@ -263,21 +264,24 @@
 #pragma mark - UIScrollView delegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    // 1
+    //pause loading if we are scrolling
     [self suspendAllOperations];
 }
 
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    // 2
+    
     if (!decelerate) {
+        
+        //start loading once scrolling stops
         [self loadImagesForOnscreenCells];
         [self resumeAllOperations];
     }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    // 3
+    
+    //start loading once scrolling stops
     [self loadImagesForOnscreenCells];
     [self resumeAllOperations];
 }

@@ -16,6 +16,7 @@
 		CEA200511974C5C20011578E /* PhotoRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA200501974C5C20011578E /* PhotoRecord.m */; };
 		CEA200541974C7860011578E /* PendingOperations.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA200531974C7860011578E /* PendingOperations.m */; };
 		CEA200571974CAF90011578E /* ImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA200561974CAF90011578E /* ImageDownloader.m */; };
+		CEA2005A1974D0730011578E /* ImageFiltration.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA200591974D0730011578E /* ImageFiltration.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,8 @@
 		CEA200531974C7860011578E /* PendingOperations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PendingOperations.m; sourceTree = "<group>"; };
 		CEA200551974CAF90011578E /* ImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageDownloader.h; sourceTree = "<group>"; };
 		CEA200561974CAF90011578E /* ImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageDownloader.m; sourceTree = "<group>"; };
+		CEA200581974D0730011578E /* ImageFiltration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageFiltration.h; sourceTree = "<group>"; };
+		CEA200591974D0730011578E /* ImageFiltration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageFiltration.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +103,8 @@
 				CEA200531974C7860011578E /* PendingOperations.m */,
 				CEA200551974CAF90011578E /* ImageDownloader.h */,
 				CEA200561974CAF90011578E /* ImageDownloader.m */,
+				CEA200581974D0730011578E /* ImageFiltration.h */,
+				CEA200591974D0730011578E /* ImageFiltration.m */,
 				CEA2003419749F5C0011578E /* Images.xcassets */,
 				CEA2002D19749F5C0011578E /* Supporting Files */,
 			);
@@ -231,6 +236,7 @@
 			files = (
 				CEA200571974CAF90011578E /* ImageDownloader.m in Sources */,
 				CEA2003319749F5C0011578E /* AppDelegate.m in Sources */,
+				CEA2005A1974D0730011578E /* ImageFiltration.m in Sources */,
 				CEA200541974C7860011578E /* PendingOperations.m in Sources */,
 				CEA200511974C5C20011578E /* PhotoRecord.m in Sources */,
 				CEA2003019749F5C0011578E /* main.m in Sources */,

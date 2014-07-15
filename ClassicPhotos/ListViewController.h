@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <CoreImage/CoreImage.h>
+#import "AFNetworking/AFNetworking.h"
+#import "PendingOperations.h"
 
 //define constant for data source URL
 #define kDatasourceURLString @"http://www.raywenderlich.com/downloads/ClassicPhotosDictionary.plist"
 
-@interface ListViewController : UITableViewController
-
-@property(nonatomic)NSDictionary* photos;
+@interface ListViewController : UITableViewController 
+@property(nonatomic)NSMutableArray* photos;
+@property(nonatomic)PendingOperations* pendingOperations;
 
 @end

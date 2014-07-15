@@ -7,9 +7,12 @@
 //
 
 #import "ListViewController.h"
+#import "PhotoRecord.h"
+#import "ImageDownloader.h"
+#import "ImageFiltration.h"
 
+@interface ListViewController ()<ImageDownloaderDelegate, ImageFiltrationDelegate>
 
-@interface ListViewController ()
 
 @end
 
@@ -24,13 +27,63 @@
     return self;
 }
 
+-(PendingOperations*)pendingOperations
+{
+    if (!_pendingOperations) {
+        _pendingOperations = [[PendingOperations alloc]init];
+    }
+    
+    return _pendingOperations;
+}
+
 //use lazy instantiation
--(NSDictionary*)photos
+-(NSMutableArray*)photos
 {
     if(!_photos)
     {
         //create the URL
         NSURL* dataSourceURL = [NSURL URLWithString:kDatasourceURLString];
+        NSURLRequest* request = [[NSURLRequest alloc]initWithURL:dataSourceURL];
+        
+        AFHTTPRequestOperation *datasource_download_operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+        
+        //set the network indicator
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+        
+        
+        [datasource_download_operation  setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSData* datasoure_data = (NSData*)responseObject;
+            
+            CFPropertyListRef plist = CFPropertyListCreateFromXMLData(kCFAllocatorDefault, (__bridge CFDataRef)datasoure_data, kCFPropertyListImmutable, NULL);
+            
+            
+            //create dictionary
+            NSDictionary* datasource_dictionary = (__bridge NSDictionary*)plist;
+            
+            //create an array to hold the photo records
+            NSMutableArray* records = [NSMutableArray array];
+            
+            //create the photo records and add them to the array
+            for (NSString* key in datasource_dictionary) {
+                PhotoRecord* record = [[PhotoRecord alloc]init];
+                record.url = [NSURL URLWithString:[datasource_dictionary objectForKey:key]];
+                record.name = key;
+                [records addObject: record];
+                record = nil;
+            }
+            
+            self.photos = records;
+            CFRelease(plist);
+            
+            [self.tableView reloadData];
+            [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:NO];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+        
+        
         
         //load the photos data soure
         _photos = [[NSDictionary alloc]initWithContentsOfURL:dataSourceURL];
@@ -84,6 +137,8 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
+    PhotoRecord* record = self.photos[indexPath.row];
+    
     NSString* rowKey = [[self.photos allKeys]objectAtIndex:indexPath.row];
     NSURL* url = [NSURL URLWithString:[self.photos valueForKey:rowKey]];
     NSData* imageData = [NSData dataWithContentsOfURL:url];
@@ -127,5 +182,15 @@
     return sepiaImage;
 }
 
+#pragma mark CustomOperationObjectDelegate Methods
+- (void)imageDownloaderDidFinish:(ImageDownloader *)downloader
+{
+    
+}
+
+- (void)imageFiltrationDidFinish:(ImageFiltration *)filtration
+{
+    
+}
 
 @end

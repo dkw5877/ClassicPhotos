@@ -15,6 +15,7 @@
 		CEA2004E1974A15B0011578E /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA2004D1974A15B0011578E /* ListViewController.m */; };
 		CEA200511974C5C20011578E /* PhotoRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA200501974C5C20011578E /* PhotoRecord.m */; };
 		CEA200541974C7860011578E /* PendingOperations.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA200531974C7860011578E /* PendingOperations.m */; };
+		CEA200571974CAF90011578E /* ImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = CEA200561974CAF90011578E /* ImageDownloader.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,8 @@
 		CEA200501974C5C20011578E /* PhotoRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoRecord.m; sourceTree = "<group>"; };
 		CEA200521974C7860011578E /* PendingOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PendingOperations.h; sourceTree = "<group>"; };
 		CEA200531974C7860011578E /* PendingOperations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PendingOperations.m; sourceTree = "<group>"; };
+		CEA200551974CAF90011578E /* ImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageDownloader.h; sourceTree = "<group>"; };
+		CEA200561974CAF90011578E /* ImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageDownloader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +98,8 @@
 				CEA200501974C5C20011578E /* PhotoRecord.m */,
 				CEA200521974C7860011578E /* PendingOperations.h */,
 				CEA200531974C7860011578E /* PendingOperations.m */,
+				CEA200551974CAF90011578E /* ImageDownloader.h */,
+				CEA200561974CAF90011578E /* ImageDownloader.m */,
 				CEA2003419749F5C0011578E /* Images.xcassets */,
 				CEA2002D19749F5C0011578E /* Supporting Files */,
 			);
@@ -224,6 +229,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEA200571974CAF90011578E /* ImageDownloader.m in Sources */,
 				CEA2003319749F5C0011578E /* AppDelegate.m in Sources */,
 				CEA200541974C7860011578E /* PendingOperations.m in Sources */,
 				CEA200511974C5C20011578E /* PhotoRecord.m in Sources */,

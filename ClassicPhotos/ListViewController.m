@@ -76,17 +76,25 @@
             self.photos = records;
             CFRelease(plist);
             
+            //update the table
             [self.tableView reloadData];
+            
+            //stop activity indicator
             [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:NO];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
+            UIAlertView* alert = [[UIAlertView alloc]initWithTitle:@"Oops!" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+            alert = nil;
+            
+            //stop activity indicator in event of error
+            [[UIApplication sharedApplication]setNetworkActivityIndicatorVisible:NO];
+            
         }];
-        
-        
-        
-        //load the photos data soure
-        _photos = [[NSDictionary alloc]initWithContentsOfURL:dataSourceURL];
+
+        //add the download operation to the download queue
+        [self.pendingOperations.downloadQueue addOperation:datasource_download_operation];
     }
     
     return _photos;
@@ -136,51 +144,60 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
+
+    
+    //create an activity indicator view
+    UIActivityIndicatorView* activityIndicatorView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    
+    //set the cell's accessory view to the new activity indicator view
+    cell.accessoryView = activityIndicatorView;
     
     PhotoRecord* record = self.photos[indexPath.row];
     
-    NSString* rowKey = [[self.photos allKeys]objectAtIndex:indexPath.row];
-    NSURL* url = [NSURL URLWithString:[self.photos valueForKey:rowKey]];
-    NSData* imageData = [NSData dataWithContentsOfURL:url];
-    UIImage* image = nil;
-    
-    if (imageData)
-    {
-        UIImage* unfilteredImage = [UIImage imageWithData:imageData];
-        image = [self applySepiaFilterToImage: unfilteredImage];
+    //check if the record already has the image
+    if (record.hasImage) {
+        
+        [(UIActivityIndicatorView*) cell.accessoryView stopAnimating];
+        cell.imageView.image = record.image;
+        cell.textLabel.text = record.name;
+    }
+    else if (record.failed){
+        [(UIActivityIndicatorView*) cell.accessoryView stopAnimating];
+        cell.textLabel.text = @"Failed to load";
+    }
+    else{//download the image
+        [(UIActivityIndicatorView*) cell.accessoryView stopAnimating];
+        cell.textLabel.text = @"loading";
+        [self startOperationsForPhotoRecord:record atIndexPath:indexPath];
     }
     
-    cell.textLabel.text = rowKey;
-    cell.imageView.image = image;
+
     return cell;
 }
 
 #pragma mark - Image Filtering Methods
--(UIImage*)applySepiaFilterToImage:(UIImage*)image
+-(void)startOperationsForPhotoRecord:(PhotoRecord*)record atIndexPath:(NSIndexPath*)indexPath
 {
-    //convert the UIImage to a CIImage
-    CIImage* inputImage = [CIImage imageWithData:UIImagePNGRepresentation(image)];
-    UIImage* sepiaImage = nil;
+    if (!record.hasImage) {
+        [self startImageDownloadingForRecord:record atIndexPath:indexPath];
+    }
     
-    //create the Core Image context
-    CIContext* context = [CIContext contextWithOptions:nil];
-    
-    //create the CIFilter
-    CIFilter* filter = [CIFilter filterWithName:@"CISepiaTone" keysAndValues:kCIInputImageKey,inputImage,@"inputIntensity",[NSNumber numberWithFloat:0.8], nil];
-    
-    //get the output image from the filter
-    CIImage* outputImage = [filter outputImage];
-    
-    //create a core graphics image reference
-    CGImageRef outputImageRef = [context createCGImage:outputImage fromRect:[outputImage extent]];
-    
-    //create the UIImage
-    sepiaImage = [UIImage imageWithCGImage:outputImageRef];
-    
-    CGImageRelease(outputImageRef);
-    
-    return sepiaImage;
+    if (!record.filtered) {
+        [self startImageFiltrationForRecord:record atIndexPath:indexPath];
+    }
 }
+
+-(void)startImageDownloadingForRecord:(PhotoRecord*)record atIndexPath:(NSIndexPath*)indexPath
+{
+    
+}
+
+
+-(void)startImageFiltrationForRecord:(PhotoRecord*)record atIndexPath:(NSIndexPath*)indexPath
+{
+    
+}
+
 
 #pragma mark CustomOperationObjectDelegate Methods
 - (void)imageDownloaderDidFinish:(ImageDownloader *)downloader

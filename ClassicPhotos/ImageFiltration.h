@@ -14,7 +14,7 @@
 @interface ImageFiltration : NSOperation
 
 @property(nonatomic, weak)id <ImageFiltrationDelegate> delegate;
-@property(nonatomic, readonly)NSIndexPath* indexPath;
+@property(nonatomic, readonly)NSIndexPath* indexPathInTableView;
 @property(nonatomic, readonly)PhotoRecord* photoRecord;
 
 - (id)initWithPhotoRecord:(PhotoRecord *)record atIndexPath:(NSIndexPath *)indexPath delegate:(id<ImageFiltrationDelegate>)theDelegate;

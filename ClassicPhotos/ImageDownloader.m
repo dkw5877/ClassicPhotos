@@ -7,6 +7,13 @@
 //
 
 #import "ImageDownloader.h"
+@interface ImageDownloader()
+
+@property(nonatomic, readwrite)NSIndexPath* indexPathInTableView;
+@property(nonatomic, readwrite)PhotoRecord* photoRecord;
+
+@end
+
 
 @implementation ImageDownloader
 
@@ -16,7 +23,7 @@
     
     if (self) {
         _photoRecord = photoRecord;
-        _indexPath =  indexPath;
+        _indexPathInTableView =  indexPath;
         _delegate = theDelegate;
     }
     return self;

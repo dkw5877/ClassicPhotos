@@ -166,12 +166,14 @@
         cell.textLabel.text = @"Failed to load";
     }
     else{//download the image
-        [(UIActivityIndicatorView*) cell.accessoryView stopAnimating];
-        cell.textLabel.text = @"loading";
-        [self startOperationsForPhotoRecord:record atIndexPath:indexPath];
+        [(UIActivityIndicatorView*) cell.accessoryView startAnimating];
+        cell.textLabel.text = @"";
+        
+        if (!tableView.dragging && tableView.decelerating) {
+            [self startOperationsForPhotoRecord:record atIndexPath:indexPath];
+        }
+        
     }
-    
-
     return cell;
 }
 
@@ -256,6 +258,96 @@
     
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     [self.pendingOperations.filtrationsInProgress removeObjectForKey:indexPath];
+}
+
+#pragma mark - UIScrollView delegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    // 1
+    [self suspendAllOperations];
+}
+
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    // 2
+    if (!decelerate) {
+        [self loadImagesForOnscreenCells];
+        [self resumeAllOperations];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    // 3
+    [self loadImagesForOnscreenCells];
+    [self resumeAllOperations];
+}
+
+
+#pragma mark - Cancelling, suspending, resuming queues / operations
+
+- (void)suspendAllOperations {
+    [self.pendingOperations.downloadQueue setSuspended:YES];
+    [self.pendingOperations.filtrationQueue setSuspended:YES];
+}
+
+
+- (void)resumeAllOperations {
+    [self.pendingOperations.downloadQueue setSuspended:NO];
+    [self.pendingOperations.filtrationQueue setSuspended:NO];
+}
+
+
+- (void)cancelAllOperations {
+    [self.pendingOperations.downloadQueue cancelAllOperations];
+    [self.pendingOperations.filtrationQueue cancelAllOperations];
+}
+
+
+- (void)loadImagesForOnscreenCells {
+    
+    //get the list of visible row
+    NSSet *visibleRows = [NSSet setWithArray:[self.tableView indexPathsForVisibleRows]];
+    
+    //get the list of pending operations
+    NSMutableSet *pendingOperations = [NSMutableSet setWithArray:[self.pendingOperations.downloadsInProgress allKeys]];
+    [pendingOperations addObjectsFromArray:[self.pendingOperations.filtrationsInProgress allKeys]];
+    
+    NSMutableSet *toBeCancelled = [pendingOperations mutableCopy];
+    NSMutableSet *toBeStarted = [visibleRows mutableCopy];
+    
+    //calculate the number of rows to load
+    [toBeStarted minusSet:pendingOperations];
+    
+    //calculte the number of rows to be cancled
+    [toBeCancelled minusSet:visibleRows];
+    
+    //for each row to be cancelled, locate it in the respective queue and cancel the operation
+    for (NSIndexPath *anIndexPath in toBeCancelled) {
+        
+        //find the object and cancel the download
+        ImageDownloader *pendingDownload = [self.pendingOperations.downloadsInProgress objectForKey:anIndexPath];
+        [pendingDownload cancel];
+        
+        //canceling the operation does not remove it from the queue, so remove it explictly
+        [self.pendingOperations.downloadsInProgress removeObjectForKey:anIndexPath];
+        
+        //find the object and cancel the filtering
+        ImageFiltration *pendingFiltration = [self.pendingOperations.filtrationsInProgress objectForKey:anIndexPath];
+        [pendingFiltration cancel];
+        
+        //canceling the operation does not remove it from the queue, so remove it explictly
+        [self.pendingOperations.filtrationsInProgress removeObjectForKey:anIndexPath];
+    }
+    toBeCancelled = nil;
+    
+    //for each row to be loaded, get the photo record and start the download operation
+    for (NSIndexPath *anIndexPath in toBeStarted) {
+        
+        PhotoRecord *recordToProcess = [self.photos objectAtIndex:anIndexPath.row];
+        [self startOperationsForPhotoRecord:recordToProcess atIndexPath:anIndexPath];
+    }
+    toBeStarted = nil;
+    
 }
 
 @end

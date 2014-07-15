@@ -33,13 +33,13 @@
 
 
 
--(NSMutableDictionary*)filtrationInProgress
+-(NSMutableDictionary*)filtrationsInProgress
 {
-    if (!_filtrationInProgress) {
-        _filtrationInProgress = [[NSMutableDictionary alloc]init];
+    if (!_filtrationsInProgress) {
+        _filtrationsInProgress = [[NSMutableDictionary alloc]init];
     }
     
-    return _filtrationInProgress;
+    return _filtrationsInProgress;
 }
 
 -(NSOperationQueue*)filtrationQueue

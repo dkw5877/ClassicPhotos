@@ -13,7 +13,7 @@
 @property(nonatomic)NSMutableDictionary* downloadsInProgress;
 @property(nonatomic)NSOperationQueue* downloadQueue;
 
-@property(nonatomic)NSMutableDictionary* filtrationInProgress;
+@property(nonatomic)NSMutableDictionary* filtrationsInProgress;
 @property(nonatomic)NSOperationQueue* filtrationQueue;
 
 @end

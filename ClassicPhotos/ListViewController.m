@@ -189,25 +189,73 @@
 
 -(void)startImageDownloadingForRecord:(PhotoRecord*)record atIndexPath:(NSIndexPath*)indexPath
 {
-    
+    //if we are not already downloading, then start
+    if (![self.pendingOperations.downloadsInProgress.allKeys containsObject:indexPath]) {
+        
+        //create the imageDownloader object
+        ImageDownloader* imageDownloader = [[ImageDownloader alloc]initWithPhotoRecord:record atIndexPath:indexPath delegate:self];
+        
+        //add the downloader to the pending operations Dictionary with the indexPath as the key
+        [self.pendingOperations.downloadsInProgress setObject:imageDownloader forKey:indexPath];
+        
+        //add the downloader to the queue
+        [self.pendingOperations.downloadQueue addOperation:imageDownloader];
+        
+        
+    }
 }
 
 
 -(void)startImageFiltrationForRecord:(PhotoRecord*)record atIndexPath:(NSIndexPath*)indexPath
 {
-    
+    if (![self.pendingOperations.filtrationsInProgress.allKeys containsObject:indexPath]) {
+        
+        // create the photo filtration object
+        ImageFiltration *imageFiltration = [[ImageFiltration alloc] initWithPhotoRecord:record atIndexPath:indexPath delegate:self];
+        
+        //create the image downloader
+        ImageDownloader *dependency = [self.pendingOperations.downloadsInProgress objectForKey:indexPath];
+        
+        
+        if (dependency)
+            [imageFiltration addDependency:dependency];
+        
+        //set the filtrations Dictionary value with the indexPath as the key
+        [self.pendingOperations.filtrationsInProgress setObject:imageFiltration forKey:indexPath];
+        
+        //add it to the queue
+        [self.pendingOperations.filtrationQueue addOperation:imageFiltration];
+    }
 }
 
 
 #pragma mark CustomOperationObjectDelegate Methods
 - (void)imageDownloaderDidFinish:(ImageDownloader *)downloader
 {
+    //Check for the indexPath of the operation, whether it is a download, or filtration.
+    NSIndexPath *indexPath = downloader.indexPathInTableView;
     
+    //Get the PhotoRecord instance
+    //PhotoRecord *theRecord = downloader.photoRecord;
+    
+    //update the tableview for the specific row
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    
+    //remove the downloaded record from the progress queue
+    [self.pendingOperations.downloadsInProgress removeObjectForKey:indexPath];
 }
+
+
 
 - (void)imageFiltrationDidFinish:(ImageFiltration *)filtration
 {
+    //Check for the indexPath of the operation, whether it is a download, or filtration.
+    NSIndexPath *indexPath = filtration.indexPathInTableView;
     
+    //PhotoRecord *theRecord = filtration.photoRecord;
+    
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    [self.pendingOperations.filtrationsInProgress removeObjectForKey:indexPath];
 }
 
 @end

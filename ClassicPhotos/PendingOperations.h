@@ -10,4 +10,10 @@
 
 @interface PendingOperations : NSObject
 
+@property(nonatomic)NSMutableDictionary* downloadsInProgress;
+@property(nonatomic)NSOperationQueue* downloadQueue;
+
+@property(nonatomic)NSMutableDictionary* filtrationInProgress;
+@property(nonatomic)NSOperationQueue* filtrationQueue;
+
 @end
